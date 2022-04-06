@@ -24,17 +24,20 @@ class InstagramBot:
         password_element.send_keys(self.password)#write the password
         password_element.send_keys(Keys.RETURN)#press the ENTER key
         time.sleep(5)#wait the page to load
-        elem = driver.find_element_by_xpath('/html/body/div[1]/section/main/div/div/div/div/button')
-        if elem.is_displayed():
-            driver.find_element_by_xpath('/html/body/div[1]/section/main/div/div/div/div/button').click #не сега butona
-        else:    
-            self.like_posts('underwater') #избери хаштаг
+        if driver.find_element_by_xpath('/html/body/div[1]/section/main/div/div/div/div/button').is_displayed():
+            driver.find_element_by_xpath('/html/body/div[1]/section/main/div/div/div/div/button').click() #не сега butona
+            time.sleep(3)
+        # driver.find_element_by_xpath('/html/body/div[1]/section/main/div/div/div/div/button').click #не сега butona   
+        else:
+            pass
+        driver.find_element_by_xpath('/html/body/div[6]/div/div/div/div[3]/button[2]').click() #не сега butona
+        self.like_posts('underwater') #избери хаштаг
 
 
     def like_posts(self,hashtag):
         driver = self.driver
         driver.get('https://www.instagram.com/explore/tags/' + hashtag + '/')#search the link of the hashtag
-        time.sleep(10)#wait the page to load
+        time.sleep(3)#wait the page to load
 
         for i in range(2):#scroll the page to the bottom X times to load more posts        КОЛКО ПЪТИ ДА СКРОЛВА
             driver.execute_script('window.scrollTo(0, document.body.scrollHeight);')
@@ -50,21 +53,27 @@ class InstagramBot:
             try:                
                 time.sleep(1)
                 now = time.strftime("%H:%M:%S") #save the time
-                elem = driver.find_element_by_xpath('/html/body/div[1]/section/main/div/div/div/div/button')
-                if elem.is_displayed():
-                    driver.find_element_by_xpath('/html/body/div[1]/section/main/div/div/div/div/button').click #не сега butona
-                    print(f'Button "Not now" appear at {now}')
-                    time.sleep(19) #wait to restart the cycle
-                else:
+                if driver.find_element_by_xpath('/html/body/div[1]/section/main/div/div/div/div/button').is_displayed():
+                    driver.find_element_by_xpath('/html/body/div[1]/section/main/div/div/div/div/button').click() #не сега butona
+                    time.sleep(5)
                     driver.find_element_by_class_name("fr66n").click() #click the like button инспектира се в html-а на сайта.
                     print(f'count:{obshto} {pic_href} liked! at ' + now) #show the confirmation and the time "wpO6b  " fr66n
                     obshto+=1
                     time.sleep(19) #wait to restart the cycle
+                else:
+                    pass
+                driver.find_element_by_class_name("fr66n").click() #click the like button инспектира се в html-а на сайта.
+                print(f'count:{obshto} {pic_href} liked! at ' + now) #show the confirmation and the time "wpO6b  " fr66n
+                obshto+=1
+                time.sleep(19) #wait to restart the cycle                
             except Exception as e:
-                print(f'error! at '+ now - {pic_href})#show the fail and the time 
+                driver.find_element_by_class_name("fr66n").click() #click the like button инспектира се в html-а на сайта.
+                print(f'count:{obshto} {pic_href} liked! at ' + now) #show the confirmation and the time "wpO6b  " fr66n
+                obshto+=1     
+                print(f'error! Exception at '+ now)#show the fail and the time 
                 # da natisne ne iskam izvestiq   
-                time.sleep(60)#wait to retry
+                time.sleep(19)#wait to retry
         
 
-MetoBot = InstagramBot('@yourUser','@yourPassword')#define the bot and it's parameters 
-MetoBot.login()#excute the bot
+LucasBot = InstagramBot('@yourUser','@yourPassword')#define the bot and it's parameters 
+LucasBot.login()#excute the bot
